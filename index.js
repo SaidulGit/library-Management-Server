@@ -33,10 +33,21 @@ async function run() {
     const AllBrand = client.db("Librasy-system").collection("brand");
     const Allbooks = client.db("Librasy-system").collection("allbooks");
   
-
+// Books Data
     app.get("/brand",async (req,res)=>{
       const brand = AllBrand.find();
       const result = await brand.toArray();
+      res.send(result)
+    })
+    app.get("/allbooks",async (req,res)=>{
+      const brand = Allbooks.find();
+      const result = await brand.toArray();
+      res.send(result)
+    })
+    app.get("/books/:books",async (req,res)=>{
+      const brand = req.params.books;
+      const data = Allbooks.find({category : brand} )
+      const result = await data.toArray();
       res.send(result)
     })
 
