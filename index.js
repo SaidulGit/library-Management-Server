@@ -32,6 +32,7 @@ async function run() {
      
     const AllBrand = client.db("Librasy-system").collection("brand");
     const Allbooks = client.db("Librasy-system").collection("allbooks");
+    const cart = client.db("Librasy-system").collection("cart");
   
 // Books Data
     app.get("/brand",async (req,res)=>{
@@ -81,6 +82,20 @@ async function run() {
 
   const result = await Allbooks.updateOne(quary,updateData);
   res.send(result);
+    })
+
+    // Borrow book
+    app.post("/borrow",async (req,res)=> {
+      const data = req.body;
+      console.log(data)
+      const result = await cart.insertOne(data)
+      res.send(result);
+    })
+
+    app.get("/borrowdata",async (req,res)=>{
+      const brand = cart.find();
+      const result = await brand.toArray();
+      res.send(result)
     })
 
     // Send a ping to confirm a successful connection
