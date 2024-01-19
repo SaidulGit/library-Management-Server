@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -49,6 +49,38 @@ async function run() {
       const data = Allbooks.find({category : brand} )
       const result = await data.toArray();
       res.send(result)
+    })
+    app.get("/book/:name",async (req,res)=>{
+      const name = req.params.name;
+      const data = Allbooks.find({ name : name })
+      const result = await data.toArray();
+      res.send(result)
+    })
+    // add book
+    app.post("/add",async (req,res)=> {
+      const data = req.body;
+      const result = await Allbooks.insertOne(data)
+      res.send(result);
+    })
+
+    // Update 
+    app.put("/update/:id",async (req,res)=>{
+      const id = req.params.id;
+      const data = req.body;
+      const quary = { _id : new ObjectId(id)};
+      const updateData = {
+        $set:{
+          name : data.name,
+          author : data.author,
+          rating : data.rating,
+          image : data.image,
+          category : data.category,
+
+        }
+      }
+
+  const result = await Allbooks.updateOne(quary,updateData);
+  res.send(result);
     })
 
     // Send a ping to confirm a successful connection
